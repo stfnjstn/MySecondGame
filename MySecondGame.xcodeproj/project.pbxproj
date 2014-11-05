@@ -15,18 +15,7 @@
 		2C9D0FCA19F9AC320028E429 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C9D0FC819F9AC320028E429 /* Main.storyboard */; };
 		2C9D0FCC19F9AC320028E429 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C9D0FCB19F9AC320028E429 /* Images.xcassets */; };
 		2C9D0FCF19F9AC320028E429 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C9D0FCD19F9AC320028E429 /* LaunchScreen.xib */; };
-		2C9D0FDB19F9AC330028E429 /* MySecondGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9D0FDA19F9AC330028E429 /* MySecondGameTests.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		2C9D0FD519F9AC320028E429 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2C9D0FB319F9AC320028E429 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2C9D0FBA19F9AC320028E429;
-			remoteInfo = MySecondGame;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		2C5516DD1A0974B800F55C08 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -39,20 +28,10 @@
 		2C9D0FC919F9AC320028E429 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2C9D0FCB19F9AC320028E429 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		2C9D0FCE19F9AC320028E429 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		2C9D0FD419F9AC320028E429 /* MySecondGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MySecondGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C9D0FD919F9AC330028E429 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C9D0FDA19F9AC330028E429 /* MySecondGameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySecondGameTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		2C9D0FB819F9AC320028E429 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2C9D0FD119F9AC320028E429 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -66,7 +45,6 @@
 			isa = PBXGroup;
 			children = (
 				2C9D0FBD19F9AC320028E429 /* MySecondGame */,
-				2C9D0FD719F9AC330028E429 /* MySecondGameTests */,
 				2C9D0FBC19F9AC320028E429 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -75,7 +53,6 @@
 			isa = PBXGroup;
 			children = (
 				2C9D0FBB19F9AC320028E429 /* MySecondGame.app */,
-				2C9D0FD419F9AC320028E429 /* MySecondGameTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -104,23 +81,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2C9D0FD719F9AC330028E429 /* MySecondGameTests */ = {
-			isa = PBXGroup;
-			children = (
-				2C9D0FDA19F9AC330028E429 /* MySecondGameTests.swift */,
-				2C9D0FD819F9AC330028E429 /* Supporting Files */,
-			);
-			path = MySecondGameTests;
-			sourceTree = "<group>";
-		};
-		2C9D0FD819F9AC330028E429 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				2C9D0FD919F9AC330028E429 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -141,24 +101,6 @@
 			productReference = 2C9D0FBB19F9AC320028E429 /* MySecondGame.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2C9D0FD319F9AC320028E429 /* MySecondGameTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2C9D0FE119F9AC330028E429 /* Build configuration list for PBXNativeTarget "MySecondGameTests" */;
-			buildPhases = (
-				2C9D0FD019F9AC320028E429 /* Sources */,
-				2C9D0FD119F9AC320028E429 /* Frameworks */,
-				2C9D0FD219F9AC320028E429 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2C9D0FD619F9AC320028E429 /* PBXTargetDependency */,
-			);
-			name = MySecondGameTests;
-			productName = MySecondGameTests;
-			productReference = 2C9D0FD419F9AC320028E429 /* MySecondGameTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -170,10 +112,6 @@
 				TargetAttributes = {
 					2C9D0FBA19F9AC320028E429 = {
 						CreatedOnToolsVersion = 6.1;
-					};
-					2C9D0FD319F9AC320028E429 = {
-						CreatedOnToolsVersion = 6.1;
-						TestTargetID = 2C9D0FBA19F9AC320028E429;
 					};
 				};
 			};
@@ -191,7 +129,6 @@
 			projectRoot = "";
 			targets = (
 				2C9D0FBA19F9AC320028E429 /* MySecondGame */,
-				2C9D0FD319F9AC320028E429 /* MySecondGameTests */,
 			);
 		};
 /* End PBXProject section */
@@ -205,13 +142,6 @@
 				2C9D0FCF19F9AC320028E429 /* LaunchScreen.xib in Resources */,
 				2C9D0FCC19F9AC320028E429 /* Images.xcassets in Resources */,
 				2C9D0FCA19F9AC320028E429 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2C9D0FD219F9AC320028E429 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,23 +159,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2C9D0FD019F9AC320028E429 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2C9D0FDB19F9AC330028E429 /* MySecondGameTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		2C9D0FD619F9AC320028E429 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2C9D0FBA19F9AC320028E429 /* MySecondGame */;
-			targetProxy = 2C9D0FD519F9AC320028E429 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		2C9D0FC819F9AC320028E429 /* Main.storyboard */ = {
@@ -366,40 +280,6 @@
 			};
 			name = Release;
 		};
-		2C9D0FE219F9AC330028E429 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = MySecondGameTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MySecondGame.app/MySecondGame";
-			};
-			name = Debug;
-		};
-		2C9D0FE319F9AC330028E429 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = MySecondGameTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MySecondGame.app/MySecondGame";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -417,15 +297,6 @@
 			buildConfigurations = (
 				2C9D0FDF19F9AC330028E429 /* Debug */,
 				2C9D0FE019F9AC330028E429 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2C9D0FE119F9AC330028E429 /* Build configuration list for PBXNativeTarget "MySecondGameTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2C9D0FE219F9AC330028E429 /* Debug */,
-				2C9D0FE319F9AC330028E429 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

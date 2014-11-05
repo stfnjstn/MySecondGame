@@ -9,35 +9,62 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    
+    var heroSprite = SKSpriteNode(imageNamed:"Spaceship")
+    var invisibleControllerSprite = SKSpriteNode()
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!";
-        myLabel.fontSize = 65;
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
+       
+        self.backgroundColor = UIColor.blackColor()
         
-        self.addChild(myLabel)
+        // Create the hero sprite and place it in the middle of the screen
+        heroSprite.xScale = 0.15
+        heroSprite.yScale = 0.15
+        heroSprite.position = CGPointMake(self.frame.width/2, self.frame.height/2)
+        self.addChild(heroSprite)
+        
+        // Define invisible sprite for rotating and steering behavior without trigonometry
+        invisibleControllerSprite.size = CGSizeMake(0, 0)
+        self.addChild(invisibleControllerSprite)
+        
+        // Define Constraint for the orientation behavior
+        let rangeForOrientation = SKRange(constantValue: CGFloat(M_2_PI*7))
+        heroSprite.constraints = [SKConstraint.orientToNode(invisibleControllerSprite, offset: rangeForOrientation)]
+        
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         /* Called when a touch begins */
         
         for touch: AnyObject in touches {
-            let location = touch.locationInNode(self)
             
-            let sprite = SKSpriteNode(imageNamed:"Spaceship")
+            // Determine the new position for the invisible sprite:
+            // The calculation is needed to ensure the positions of both sprites
+            // are nearly the same, but different. Otherwise the hero sprite rotates
+            // back to it's original orientation after reaching the location of
+            // the invisible sprite
+            var xOffset:CGFloat = 1.0
+            var yOffset:CGFloat = 1.0
+            var location = touch.locationInNode(self)
+            if location.x>heroSprite.position.x {
+                xOffset = -1.0
+            }
+            if location.y>heroSprite.position.y {
+                yOffset = -1.0
+            }
             
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
+            // Create an action to move the invisibleControllerSprite.
+            // This will cause automatic orientation changes for the hero sprite
+            let actionMoveInvisibleNode = SKAction.moveTo(CGPointMake(location.x - xOffset, location.y - yOffset), duration: 0.2)
+            invisibleControllerSprite.runAction(actionMoveInvisibleNode)
             
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
+            // Create an action to move the hero sprite to the touch location
+            let actionMove = SKAction.moveTo(location, duration: 1)
+            heroSprite.runAction(actionMove)
             
-            sprite.runAction(SKAction.repeatActionForever(action))
-            
-            self.addChild(sprite)
         }
-    }
+    }    
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
