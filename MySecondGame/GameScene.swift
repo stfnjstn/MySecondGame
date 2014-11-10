@@ -12,6 +12,7 @@ class GameScene: SKScene {
     
     var heroSprite = SKSpriteNode(imageNamed:"Spaceship")
     var invisibleControllerSprite = SKSpriteNode()
+    var enemySprites = EnemySpriteController()
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -19,8 +20,8 @@ class GameScene: SKScene {
         self.backgroundColor = UIColor.blackColor()
         
         // Create the hero sprite and place it in the middle of the screen
-        heroSprite.xScale = 0.15
-        heroSprite.yScale = 0.15
+        heroSprite.xScale = 0.10
+        heroSprite.yScale = 0.10
         heroSprite.position = CGPointMake(self.frame.width/2, self.frame.height/2)
         self.addChild(heroSprite)
         
@@ -31,6 +32,11 @@ class GameScene: SKScene {
         // Define Constraint for the orientation behavior
         let rangeForOrientation = SKRange(constantValue: CGFloat(M_2_PI*7))
         heroSprite.constraints = [SKConstraint.orientToNode(invisibleControllerSprite, offset: rangeForOrientation)]
+        
+        // Add enemy sprites
+        for(var i=0; i<3;i++){
+            self.addChild(enemySprites.spawnEnemy(heroSprite))
+        }
         
     }
     
@@ -66,7 +72,15 @@ class GameScene: SKScene {
         }
     }    
    
+    var _dLastShootTime: CFTimeInterval = 1
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+            
+        if currentTime - _dLastShootTime >= 1 {
+            enemySprites.shoot(heroSprite)
+            _dLastShootTime=currentTime
+        }
     }
+
 }
