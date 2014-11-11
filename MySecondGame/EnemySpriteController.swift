@@ -16,8 +16,8 @@ import SpriteKit
 class EnemySpriteController {
     var enemySprites: [SKSpriteNode] = []
 
-    // Return a new enemy sprite which follows the spriteToFollow node
-    func spawnEnemy(spriteToFollow: SKNode) -> SKSpriteNode {
+    // Return a new enemy sprite which follows the targetSprite node
+    func spawnEnemy(targetSprite: SKNode) -> SKSpriteNode {
 
         // create a new enemy sprite
         let newEnemy = SKSpriteNode(imageNamed:"Spaceship")
@@ -36,13 +36,13 @@ class EnemySpriteController {
         // Define Constraints for orientation/targeting behavior
         let i = enemySprites.count-1
         let rangeForOrientation = SKRange(constantValue:CGFloat(M_2_PI*7))
-        let orientConstraint = SKConstraint.orientToNode(spriteToFollow, offset: rangeForOrientation)
+        let orientConstraint = SKConstraint.orientToNode(targetSprite, offset: rangeForOrientation)
         let rangeToSprite = SKRange(lowerLimit: 80, upperLimit: 90)
         var distanceConstraint: SKConstraint
   
         // First enemy has to follow spriteToFollow, second enemy has to follow first enemy, ...
         if enemySprites.count-1 == 0 {
-            distanceConstraint = SKConstraint.distance(rangeToSprite, toNode: spriteToFollow)
+            distanceConstraint = SKConstraint.distance(rangeToSprite, toNode: targetSprite)
         } else {
             distanceConstraint = SKConstraint.distance(rangeToSprite, toNode: enemySprites[i-1])
         }
