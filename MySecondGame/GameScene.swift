@@ -10,9 +10,16 @@ import SpriteKit
 
 class GameScene: SKScene {
     
+    // Global sprite properties
     var heroSprite = SKSpriteNode(imageNamed:"Spaceship")
     var invisibleControllerSprite = SKSpriteNode()
     var enemySprites = EnemySpriteController()
+    
+    /// HUD global properties
+    var lifeNodes : [SKSpriteNode] = []
+    var remainingLifes = 3
+    var scoreNode = SKLabelNode()
+    var score = 0
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -37,6 +44,9 @@ class GameScene: SKScene {
         for(var i=0; i<3;i++){
             self.addChild(enemySprites.spawnEnemy(heroSprite))
         }
+        
+        // Add HUD
+        createHUD()
         
     }
     
@@ -70,7 +80,57 @@ class GameScene: SKScene {
             heroSprite.runAction(actionMove)
             
         }
-    }    
+    }
+    
+    
+
+    
+    func createHUD() {
+        
+        // Create a root node with black background to position and group the HUD elemets
+        // HUD size is relative to the screen resolution to handle iPad and iPhone screens
+        var hud = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(self.size.width, self.size.height*0.05))
+        hud.anchorPoint=CGPointMake(0, 0)
+        hud.position = CGPointMake(0, self.size.height-hud.size.height)
+        self.addChild(hud)
+        
+        // Display the remaining lifes
+        // Add icons to display the remaining lifes
+        // Reuse the Spaceship image: Scale and position releative to the HUD size
+        let lifeSize = CGSizeMake(hud.size.height-10, hud.size.height-10)
+        for(var i = 0; i<self.remainingLifes; i++) {
+            var tmpNode = SKSpriteNode(imageNamed: "Spaceship")
+            lifeNodes.append(tmpNode)
+            tmpNode.size = lifeSize
+            tmpNode.position=CGPointMake(tmpNode.size.width * 1.3 * (1.0 + CGFloat(i)), (hud.size.height-5)/2)
+            hud.addChild(tmpNode)
+        }
+        
+        // Pause button container and label
+        // Needed to increase the touchable area
+        // Names will be used to identify these elements in the touch handler
+        var pauseContainer = SKSpriteNode()
+        pauseContainer.position = CGPointMake(hud.size.width/1.5, 1)
+        pauseContainer.size = CGSizeMake(hud.size.height*3, hud.size.height*2)
+        pauseContainer.name = "PauseButtonContainer"
+        hud.addChild(pauseContainer)
+        
+        var pauseButton = SKLabelNode()
+        pauseButton.position = CGPointMake(hud.size.width/1.5, 1)
+        pauseButton.text="I I"
+        pauseButton.fontSize=hud.size.height
+        pauseButton.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center
+        pauseButton.name="PauseButton"
+        hud.addChild(pauseButton)
+        
+        // Display the current score
+        self.score = 0
+        self.scoreNode.position = CGPointMake(hud.size.width-hud.size.width * 0.1, 1)
+        self.scoreNode.text = "0"
+        self.scoreNode.fontSize = hud.size.height
+        hud.addChild(self.scoreNode)
+        
+    }
    
     var _dLastShootTime: CFTimeInterval = 1
     

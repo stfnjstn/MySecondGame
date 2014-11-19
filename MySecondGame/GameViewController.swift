@@ -14,7 +14,11 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
         // Detect the screensize
         var sizeRect = UIScreen.mainScreen().applicationFrame
         var width = sizeRect.size.width * UIScreen.mainScreen().scale
@@ -31,7 +35,7 @@ class GameViewController: UIViewController {
         
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
-            
+        
         /* Set the scale mode to scale to fit the window */
         scene.scaleMode = .AspectFill
         
