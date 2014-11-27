@@ -160,15 +160,60 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         hud.addChild(self.scoreNode)
         
     }
+    
+    func lifeLost() {
+        self.gamePaused = true
+        
+        // remove one life from hud
+        if self.remainingLifes>0 {
+            self.lifeNodes[remainingLifes-1].alpha=0.0
+            self.remainingLifes--;
+        }
+        
+        // check if remaining lifes exists
+        if (self.remainingLifes==0) {
+            showGameOverAlert()
+        }
+        
+        // Stop movement, fade out, move to center, fade in
+        heroSprite.removeAllActions()
+        self.heroSprite.runAction(SKAction.fadeOutWithDuration(1) , completion: {
+            self.heroSprite.position = CGPointMake(self.size.width/2, self.size.height/2)
+            self.heroSprite.runAction(SKAction.fadeInWithDuration(1), completion: {
+                self.gamePaused = false
+            })
+        })
+    }
+    
+
+    func showGameOverAlert() {
+        self.gamePaused = true
+        var alert = UIAlertController(title: "Game Over", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default)  { _ in
+            
+            // restore lifes in HUD
+            self.remainingLifes=3
+            for(var i = 0; i<3; i++) {
+                self.lifeNodes[i].alpha=1.0
+            }
+            // reset score
+            self.score=0
+            self.scoreNode.text = String(0)
+            self.gamePaused = false
+        })
+        
+        // show alert
+        self.view?.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
+    }
+
    
     func didBeginContact(contact: SKPhysicsContact) {
         if !self.gamePaused {
-        
+            lifeLost()
         }
     }
     
     var _dLastShootTime: CFTimeInterval = 1
-    
     override func update(currentTime: CFTimeInterval) {
 
         if !self.gamePaused {
@@ -176,6 +221,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if currentTime - _dLastShootTime >= 1 {
                 enemySprites.shoot(heroSprite)
                 _dLastShootTime=currentTime
+                
+                // Increase score
+                self.score++
+                self.scoreNode.text = String(score)
             }
         }
     }

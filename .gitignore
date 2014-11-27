@@ -13,3 +13,6 @@ MySecondGame.xcodeproj/xcuserdata/stefanjosten.xcuserdatad/xcschemes/xcschememan
 MySecondGameTests/Info.plist
 
 MySecondGameTests/MySecondGameTests.swift
+
+*.xccheckout
+
