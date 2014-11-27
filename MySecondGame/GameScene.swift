@@ -8,7 +8,10 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+let collisionBulletCategory: UInt32  = 0x1 << 0
+let collisionHeroCategory: UInt32    = 0x1 << 1
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Global sprite properties
     var heroSprite = SKSpriteNode(imageNamed:"Spaceship")
@@ -30,6 +33,16 @@ class GameScene: SKScene {
         heroSprite.xScale = 0.10
         heroSprite.yScale = 0.10
         heroSprite.position = CGPointMake(self.frame.width/2, self.frame.height/2)
+        
+        // Add physics body for collision detection
+        heroSprite.physicsBody?.dynamic = true
+        heroSprite.physicsBody = SKPhysicsBody(texture: heroSprite.texture, size: heroSprite.size)
+        heroSprite.physicsBody?.affectedByGravity = false
+        heroSprite.physicsBody?.categoryBitMask = collisionHeroCategory
+        heroSprite.physicsBody?.contactTestBitMask = collisionBulletCategory
+        heroSprite.physicsBody?.collisionBitMask = 0x0
+       
+        
         self.addChild(heroSprite)
         
         // Define invisible sprite for rotating and steering behavior without trigonometry
@@ -47,6 +60,9 @@ class GameScene: SKScene {
         
         // Add HUD
         createHUD()
+        
+        // Handle collisions
+        self.physicsWorld.contactDelegate = self
         
     }
     
@@ -132,6 +148,10 @@ class GameScene: SKScene {
         
     }
    
+    func didBeginContact(contact: SKPhysicsContact) {
+    
+    }
+    
     var _dLastShootTime: CFTimeInterval = 1
     
     override func update(currentTime: CFTimeInterval) {
