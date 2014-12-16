@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C422B161A3F752F00E2DDCD /* Explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2C422B151A3F752F00E2DDCD /* Explosion.wav */; };
+		2C422B5B1A3F892A00E2DDCD /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C422B591A3F892A00E2DDCD /* spark.png */; };
+		2C422B611A3F90C000E2DDCD /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2C422B601A3F90C000E2DDCD /* ExplosionParticle.sks */; };
 		2C5516DE1A0974B800F55C08 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 2C5516DD1A0974B800F55C08 /* README.md */; };
 		2C5516E01A0974C900F55C08 /* License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C5516DF1A0974C900F55C08 /* License.txt */; };
 		2C5516E21A1026A300F55C08 /* EnemySpriteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5516E11A1026A300F55C08 /* EnemySpriteController.swift */; };
@@ -19,6 +22,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C422B151A3F752F00E2DDCD /* Explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Explosion.wav; sourceTree = "<group>"; };
+		2C422B591A3F892A00E2DDCD /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		2C422B601A3F90C000E2DDCD /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
 		2C5516DD1A0974B800F55C08 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = MySecondGame/README.md; sourceTree = "<group>"; };
 		2C5516DF1A0974C900F55C08 /* License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
 		2C5516E11A1026A300F55C08 /* EnemySpriteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnemySpriteController.swift; sourceTree = "<group>"; };
@@ -43,6 +49,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C422B171A3F7B3A00E2DDCD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2C422B151A3F752F00E2DDCD /* Explosion.wav */,
+				2C422B601A3F90C000E2DDCD /* ExplosionParticle.sks */,
+				2C422B591A3F892A00E2DDCD /* spark.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		2C9D0FB219F9AC320028E429 = {
 			isa = PBXGroup;
 			children = (
@@ -63,6 +79,7 @@
 		2C9D0FBD19F9AC320028E429 /* MySecondGame */ = {
 			isa = PBXGroup;
 			children = (
+				2C422B171A3F7B3A00E2DDCD /* Resources */,
 				2C9D0FC019F9AC320028E429 /* AppDelegate.swift */,
 				2C9D0FC419F9AC320028E429 /* GameScene.swift */,
 				2C5516E11A1026A300F55C08 /* EnemySpriteController.swift */,
@@ -142,9 +159,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C5516E01A0974C900F55C08 /* License.txt in Resources */,
+				2C422B5B1A3F892A00E2DDCD /* spark.png in Resources */,
 				2C9D0FCF19F9AC320028E429 /* LaunchScreen.xib in Resources */,
 				2C9D0FCC19F9AC320028E429 /* Images.xcassets in Resources */,
+				2C422B611A3F90C000E2DDCD /* ExplosionParticle.sks in Resources */,
 				2C9D0FCA19F9AC320028E429 /* Main.storyboard in Resources */,
+				2C422B161A3F752F00E2DDCD /* Explosion.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

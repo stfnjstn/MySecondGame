@@ -62,9 +62,57 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Add HUD
         createHUD()
         
+        // Add Starfield
+        //addStarfield()
+        
         // Handle collisions
         self.physicsWorld.contactDelegate = self
         
+        let starfieldNode = SKNode()
+        starfieldNode.name = "starfieldNode"
+        starfieldNode.zPosition = -10
+        starfieldNode.addChild(starfieldEmitterNode(speed: -48, lifetime: size.height / 23, scale: 0.2,
+            birthRate: 1, color: SKColor.lightGrayColor()))
+        addChild(starfieldNode)
+        
+        var emitterNode = starfieldEmitterNode(speed: -32, lifetime: size.height / 10, scale: 0.14, birthRate: 2, color: SKColor.grayColor())
+        emitterNode.zPosition = -10
+        starfieldNode.addChild(emitterNode)
+        
+        emitterNode = starfieldEmitterNode(speed: -20, lifetime: size.height / 5, scale: 0.1, birthRate: 5, color: SKColor.darkGrayColor())
+        starfieldNode.addChild(emitterNode)
+        
+        // Handle collisions
+        self.physicsWorld.contactDelegate = self
+    }
+    
+    func starfieldEmitterNode(#speed: CGFloat, lifetime: CGFloat, scale: CGFloat, birthRate: CGFloat, color: SKColor) -> SKEmitterNode { // more to come
+        let star = SKLabelNode(fontNamed: "Helvetica")
+        star.fontSize = 80.0
+        star.text = "✦"
+        let textureView = SKView()
+        let texture = textureView.textureFromNode(star)
+        texture.filteringMode = .Nearest
+        
+        let emitterNode = SKEmitterNode()
+        emitterNode.particleTexture = texture
+        emitterNode.particleBirthRate = birthRate
+        emitterNode.particleColor = color
+        emitterNode.particleLifetime = lifetime
+        emitterNode.particleSpeed = speed
+        emitterNode.particleScale = scale
+        emitterNode.particleColorBlendFactor = 1
+        emitterNode.position = CGPoint(x: CGRectGetMidX(frame), y: CGRectGetMaxY(frame))
+        emitterNode.particlePositionRange = CGVector(dx: CGRectGetMaxX(frame), dy: 0)
+        emitterNode.advanceSimulationTime(NSTimeInterval(lifetime))
+        return emitterNode
+    }
+    
+    func explosion(pos: CGPoint) {
+        var emitterNode = SKEmitterNode(fileNamed: "ExplosionParticle.sks")
+        emitterNode.particlePosition = pos
+        self.addChild(emitterNode)
+        self.runAction(SKAction.waitForDuration(2), completion: { emitterNode.removeFromParent() })
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -162,7 +210,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func lifeLost() {
+        explosion(self.heroSprite.position)
+        
         self.gamePaused = true
+        
+        
+        // Play sound:
+        runAction(SKAction.playSoundFileNamed("Explosion.wav", waitForCompletion: false))
         
         // remove one life from hud
         if self.remainingLifes>0 {
