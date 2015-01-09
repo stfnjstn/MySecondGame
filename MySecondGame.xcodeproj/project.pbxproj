@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C12B2A21A5F36B400931AEF /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C12B2A11A5F36B400931AEF /* GameKit.framework */; };
 		2C422B161A3F752F00E2DDCD /* Explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2C422B151A3F752F00E2DDCD /* Explosion.wav */; };
 		2C422B5B1A3F892A00E2DDCD /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C422B591A3F892A00E2DDCD /* spark.png */; };
 		2C422B611A3F90C000E2DDCD /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2C422B601A3F90C000E2DDCD /* ExplosionParticle.sks */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C12B2A11A5F36B400931AEF /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		2C422B151A3F752F00E2DDCD /* Explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Explosion.wav; sourceTree = "<group>"; };
 		2C422B591A3F892A00E2DDCD /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		2C422B601A3F90C000E2DDCD /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
@@ -43,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C12B2A21A5F36B400931AEF /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +65,7 @@
 		2C9D0FB219F9AC320028E429 = {
 			isa = PBXGroup;
 			children = (
+				2C12B2A11A5F36B400931AEF /* GameKit.framework */,
 				2C5516DD1A0974B800F55C08 /* README.md */,
 				2C9D0FBD19F9AC320028E429 /* MySecondGame */,
 				2C9D0FBC19F9AC320028E429 /* Products */,
@@ -132,6 +136,12 @@
 				TargetAttributes = {
 					2C9D0FBA19F9AC320028E429 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = XU67R53NEB;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -288,9 +298,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = MySecondGame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -298,9 +311,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = MySecondGame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

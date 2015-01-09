@@ -8,12 +8,19 @@
 
 import UIKit
 import SpriteKit
+import GameKit
+
 
 
 class GameViewController: UIViewController {
 
+    var scene : GameScene?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.initGameCenter()
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -25,7 +32,7 @@ class GameViewController: UIViewController {
         var height = sizeRect.size.height * UIScreen.mainScreen().scale
         
         // Scene should be shown in fullscreen mode
-        let scene = GameScene(size: CGSizeMake(width, height))
+        scene = GameScene(size: CGSizeMake(width, height))
         
         
         // Configure the view.
@@ -37,7 +44,7 @@ class GameViewController: UIViewController {
         skView.ignoresSiblingOrder = true
         
         /* Set the scale mode to scale to fit the window */
-        scene.scaleMode = .AspectFill
+        scene!.scaleMode = .AspectFill
         
         skView.presentScene(scene)
     }
@@ -45,7 +52,7 @@ class GameViewController: UIViewController {
     override func shouldAutorotate() -> Bool {
         return true
     }
-
+    
     override func supportedInterfaceOrientations() -> Int {
         return Int(UIInterfaceOrientationMask.LandscapeLeft.rawValue)
     }
@@ -57,5 +64,33 @@ class GameViewController: UIViewController {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+    
+    
+    var gameCenterAvailable = false
+    func initGameCenter() {
+        if GKLocalPlayer.localPlayer().authenticated == false {
+            gameCenterAvailable = false
+            // Start the Login Promt for Game Center
+            GKLocalPlayer.localPlayer().authenticateHandler = {(viewController, error) -> Void in
+                if viewController != nil {
+                    self.scene!.gamePaused = true
+                    self.presentViewController(viewController, animated: true, completion: nil)
+                    // Add an observer to check status again after LoginState has been changed
+                    let notificationCenter = NSNotificationCenter.defaultCenter()
+                    notificationCenter.addObserver(self, selector:"gameCenterStateChanged", name: "GKPlayerAuthenticationDidChangeNotificationName", object: nil)
+                }else{
+                    println((GKLocalPlayer.localPlayer().authenticated))
+                    self.scene!.gamePaused = false
+                }
+            }
+            
+        } else {
+            gameCenterAvailable = true
+        }
+    }
+    
+    func gameCenterStateChanged() {
+        initGameCenter()
     }
 }

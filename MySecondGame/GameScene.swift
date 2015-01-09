@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import GameKit
 
 let collisionBulletCategory: UInt32  = 0x1 << 0
 let collisionHeroCategory: UInt32    = 0x1 << 1
@@ -22,8 +23,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var lifeNodes : [SKSpriteNode] = []
     var remainingLifes = 3
     var scoreNode = SKLabelNode()
-    var score = 0
+    var score  : Int64 = 0
     var gamePaused = false
+    
+    // GameCenter
+    var gameCenterAvailable = false
+    
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -255,15 +260,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.lifeNodes[i].alpha=1.0
             }
             // reset score
+            self.addScore(self.score)
             self.score=0
             self.scoreNode.text = String(0)
-            self.gamePaused = false
+            
         })
         
         // show alert
-        self.view?.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
+        self.view?.window?.rootViewController?.presentViewController(alert, animated: true, completion: {
+        self.showHighScore()
+        })
+    }
+    
+    func addScore(score: Int64) {
+        var newGCScore = GKScore(leaderboardIdentifier: "MySecondGameLeaderboard")
+        newGCScore.value = score
+        // Angemeldet?
+        GKScore.reportScores([newGCScore], withCompletionHandler: {(error) -> Void in
+            if error != nil {
+                println("Score not submitted")
+            }
+        })
+        
+        
+        
+    }
+    
+    func showHighScore() {
+
+        var a = GKLeaderbo
+    
     }
 
+    func showHighScoreFinished() {
+
+        
+        
+        self.gamePaused = false
+    }
    
     func didBeginContact(contact: SKPhysicsContact) {
         if !self.gamePaused {
