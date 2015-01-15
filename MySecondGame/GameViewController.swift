@@ -10,17 +10,15 @@ import UIKit
 import SpriteKit
 import GameKit
 
-
-
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, GKGameCenterControllerDelegate, GameSceneDelegate {
 
     var scene : GameScene?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Initialize game center
         self.initGameCenter()
-        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -31,9 +29,10 @@ class GameViewController: UIViewController {
         var width = sizeRect.size.width * UIScreen.mainScreen().scale
         var height = sizeRect.size.height * UIScreen.mainScreen().scale
         
-        // Scene should be shown in fullscreen mode
+        // Create a fullscreen Scene object
         scene = GameScene(size: CGSizeMake(width, height))
-        
+        scene!.scaleMode = .AspectFill
+        scene!.gameCenterDelegate = self
         
         // Configure the view.
         let skView = self.view as SKView
@@ -43,16 +42,13 @@ class GameViewController: UIViewController {
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
         
-        /* Set the scale mode to scale to fit the window */
-        scene!.scaleMode = .AspectFill
-        
         skView.presentScene(scene)
     }
 
     override func shouldAutorotate() -> Bool {
         return true
     }
-    
+
     override func supportedInterfaceOrientations() -> Int {
         return Int(UIInterfaceOrientationMask.LandscapeLeft.rawValue)
     }
@@ -66,31 +62,47 @@ class GameViewController: UIViewController {
         return true
     }
     
-    
-    var gameCenterAvailable = false
+    // Initialize Game Center
     func initGameCenter() {
+        
+        // Check if user is already authenticated in game center
         if GKLocalPlayer.localPlayer().authenticated == false {
-            gameCenterAvailable = false
-            // Start the Login Promt for Game Center
+
+            // Show the Login Prompt for Game Center
             GKLocalPlayer.localPlayer().authenticateHandler = {(viewController, error) -> Void in
                 if viewController != nil {
                     self.scene!.gamePaused = true
                     self.presentViewController(viewController, animated: true, completion: nil)
-                    // Add an observer to check status again after LoginState has been changed
+
+                    // Add an observer which calls 'gameCenterStateChanged' to handle a changed game center state
                     let notificationCenter = NSNotificationCenter.defaultCenter()
                     notificationCenter.addObserver(self, selector:"gameCenterStateChanged", name: "GKPlayerAuthenticationDidChangeNotificationName", object: nil)
-                }else{
-                    println((GKLocalPlayer.localPlayer().authenticated))
-                    self.scene!.gamePaused = false
                 }
             }
-            
-        } else {
-            gameCenterAvailable = true
         }
     }
     
+    // Continue the Game, if GameCenter Authentication state 
+    // has been changed (login dialog is closed)
     func gameCenterStateChanged() {
-        initGameCenter()
+        self.scene!.gamePaused = false
+    }
+    
+    // Show game center leaderboard
+    func gameOver() {
+        
+        var gcViewController = GKGameCenterViewController()
+        gcViewController.gameCenterDelegate = self
+        gcViewController.viewState = GKGameCenterViewControllerState.Leaderboards
+        gcViewController.leaderboardIdentifier = "MySecondGameLeaderboard"
+        
+        // Show leaderboard
+        self.presentViewController(gcViewController, animated: true, completion: nil)
+    }
+    
+    // Continue the game after GameCenter is closed
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+        scene!.gameOver = false
     }
 }

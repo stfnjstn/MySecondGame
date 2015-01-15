@@ -9,6 +9,11 @@
 import SpriteKit
 import GameKit
 
+// protocol to inform the delegate (GameViewController) about a game over situation
+protocol GameSceneDelegate {
+    func gameOver()
+}
+
 let collisionBulletCategory: UInt32  = 0x1 << 0
 let collisionHeroCategory: UInt32    = 0x1 << 1
 
@@ -19,16 +24,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var invisibleControllerSprite = SKSpriteNode()
     var enemySprites = EnemySpriteController()
     
-    /// HUD global properties
+    // HUD global properties
     var lifeNodes : [SKSpriteNode] = []
     var remainingLifes = 3
     var scoreNode = SKLabelNode()
-    var score  : Int64 = 0
+    var score : Int64 = 0
     var gamePaused = false
     
     // GameCenter
-    var gameCenterAvailable = false
-    
+    var gameCenterDelegate : GameSceneDelegate?
+    var gameOver = false
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -250,7 +255,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
 
     func showGameOverAlert() {
-        self.gamePaused = true
+        self.gameOver = true
         var alert = UIAlertController(title: "Game Over", message: "", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default)  { _ in
             
@@ -260,45 +265,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.lifeNodes[i].alpha=1.0
             }
             // reset score
-            self.addScore(self.score)
+            self.addLeaderboardScore(self.score)
             self.score=0
             self.scoreNode.text = String(0)
             
         })
         
         // show alert
-        self.view?.window?.rootViewController?.presentViewController(alert, animated: true, completion: {
-        self.showHighScore()
-        })
+        self.view?.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
     }
-    
-    func addScore(score: Int64) {
+
+    func addLeaderboardScore(score: Int64) {
         var newGCScore = GKScore(leaderboardIdentifier: "MySecondGameLeaderboard")
         newGCScore.value = score
-        // Angemeldet?
         GKScore.reportScores([newGCScore], withCompletionHandler: {(error) -> Void in
             if error != nil {
                 println("Score not submitted")
+                // Continue
+                self.gameOver = false
+            } else {
+                // Notify the delegate to show the game center leaderboard
+                self.gameCenterDelegate!.gameOver()
             }
         })
-        
-        
-        
-    }
-    
-    func showHighScore() {
-
-        var a = GKLeaderbo
-    
     }
 
-    func showHighScoreFinished() {
-
-        
-        
-        self.gamePaused = false
-    }
-   
     func didBeginContact(contact: SKPhysicsContact) {
         if !self.gamePaused {
             lifeLost()
@@ -308,7 +299,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var _dLastShootTime: CFTimeInterval = 1
     override func update(currentTime: CFTimeInterval) {
 
-        if !self.gamePaused {
+        if !self.gamePaused && !self.gameOver {
             
             if currentTime - _dLastShootTime >= 1 {
                 enemySprites.shoot(heroSprite)
