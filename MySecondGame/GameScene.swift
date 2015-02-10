@@ -2,7 +2,7 @@
 //  GameScene.swift
 //  MySecondGame
 //
-//  Created by STEFAN JOSTEN on 23.10.14.
+//  Created by STEFAN on 23.10.14.
 //  Copyright (c) 2014 Stefan. All rights reserved.
 //
 
@@ -18,6 +18,8 @@ let collisionBulletCategory: UInt32  = 0x1 << 0
 let collisionHeroCategory: UInt32    = 0x1 << 1
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+    
+    let soundAction = SKAction.playSoundFileNamed("Explosion.wav", waitForCompletion: false)
     
     // Global sprite properties
     var heroSprite = SKSpriteNode(imageNamed:"Spaceship")
@@ -230,7 +232,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         // Play sound:
-        runAction(SKAction.playSoundFileNamed("Explosion.wav", waitForCompletion: false))
+        runAction(soundAction)
         
         // remove one life from hud
         if self.remainingLifes>0 {

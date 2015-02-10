@@ -2,17 +2,22 @@
 //  GameViewController.swift
 //  MySecondGame
 //
-//  Created by STEFAN JOSTEN on 23.10.14.
+//  Created by STEFAN on 23.10.14.
 //  Copyright (c) 2014 Stefan. All rights reserved.
 //
 
 import UIKit
 import SpriteKit
 import GameKit
+import iAd
 
-class GameViewController: UIViewController, GKGameCenterControllerDelegate, GameSceneDelegate {
+class GameViewController: UIViewController, ADBannerViewDelegate, GKGameCenterControllerDelegate, GameSceneDelegate {
 
     var scene : GameScene?
+    
+    // Properties for Banner Ad
+    var iAdBanner = ADBannerView()
+    var bannerVisible = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,13 +41,21 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         
         // Configure the view.
         let skView = self.view as SKView
-        skView.showsFPS = true
-        skView.showsNodeCount = true
+        //skView.showsFPS = true
+        //skView.showsNodeCount = true
         
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
         
         skView.presentScene(scene)
+        
+        // Prepare banner Ad
+        iAdBanner.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.width, 50)
+        iAdBanner.delegate = self
+        bannerVisible = false
+        
+        // Prepare fullscreen Ad
+        UIViewController.prepareInterstitialAds()
     }
 
     override func shouldAutorotate() -> Bool {
@@ -71,7 +84,7 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
             // Show the Login Prompt for Game Center
             GKLocalPlayer.localPlayer().authenticateHandler = {(viewController, error) -> Void in
                 if viewController != nil {
-                    self.scene!.gamePaused = true
+                    //self.scene!.gamePaused = true
                     self.presentViewController(viewController, animated: true, completion: nil)
 
                     // Add an observer which calls 'gameCenterStateChanged' to handle a changed game center state
@@ -97,12 +110,70 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         gcViewController.leaderboardIdentifier = "MySecondGameLeaderboard"
         
         // Show leaderboard
-        self.presentViewController(gcViewController, animated: true, completion: nil)
+        if GKLocalPlayer.localPlayer().authenticated == true {
+            self.presentViewController(gcViewController, animated: true, completion: {
+        })
+        } else {
+            // Show fullscreen Ad
+            self.openAds(self)
+        }
     }
     
     // Continue the game after GameCenter is closed
     func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
         gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
-        scene!.gameOver = false
+        //scene!.gameOver = false
+        
+        // Show fullscreen Ad
+        openAds(self)
+    }
+    
+    // Show banner, if Ad is successfully loaded.
+    func bannerViewDidLoadAd(banner: ADBannerView!) {
+        if(bannerVisible == false) {
+            
+            // Add banner Ad to the view
+            if(iAdBanner.superview == nil) {
+                self.view.addSubview(iAdBanner)
+            }
+            
+            // Move banner into visible screen frame:
+            UIView.beginAnimations("iAdBannerShow", context: nil)
+            banner.frame = CGRectOffset(banner.frame, 0, -banner.frame.size.height)
+            UIView.commitAnimations()
+            
+            bannerVisible = true
+        }
+    }
+    
+    // Hide banner, if Ad is not loaded.
+    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        if(bannerVisible == true) {
+            // Move banner below screen frame:
+            UIView.beginAnimations("iAdBannerHide", context: nil)
+            banner.frame = CGRectOffset(banner.frame, 0, banner.frame.size.height)
+            UIView.commitAnimations()
+            bannerVisible = false
+        }
+    }
+    
+    // Open a fullscreen Ad
+    func openAds(sender: AnyObject) {
+        // Create an alert
+        var alert = UIAlertController(title: "", message: "Play again?", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        // Play again option
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default)  { _ in
+            self.scene!.gameOver = false
+            })
+        
+        // Show fullscreen Ad option
+        alert.addAction(UIAlertAction(title: "Watch Ad", style: UIAlertActionStyle.Default)  { _ in
+            self.interstitialPresentationPolicy = ADInterstitialPresentationPolicy.Manual
+            self.requestInterstitialAdPresentation()
+            self.scene!.gameOver = false
+            })
+        
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 }

@@ -2,7 +2,7 @@
 //  EnemySpriteController.swift
 //  MySecondGame
 //
-//  Created by STEFAN JOSTEN on 09.11.14.
+//  Created by STEFAN on 09.11.14.
 //  Copyright (c) 2014 Stefan. All rights reserved.
 //
 
@@ -25,7 +25,7 @@ class EnemySpriteController {
         newEnemy.xScale = 0.08
         newEnemy.yScale = 0.08
         newEnemy.color = UIColor.redColor()
-        newEnemy.colorBlendFactor=0.4
+        newEnemy.colorBlendFactor=0.6
         
         // position new sprite at a random position on the screen
         var sizeRect = UIScreen.mainScreen().applicationFrame;
