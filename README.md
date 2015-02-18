@@ -7,7 +7,11 @@ http://stefansdevplayground.blogspot.de
 
 The videos are available in my YouTube channel: https://www.youtube.com/channel/UCwC_QHjZ-COEQpLVAjaDyfQ
 
-You can download my prototyping App for creating this tutorial here: https://itunes.apple.com/us/app/yet-another-spaceshooter/id949662362?mt=8
+This version in AppStore:
+https://itunes.apple.com/us/app/mysecondgame/id956647245?ls=1&mt=8
+
+More sophisticated version. Also using the code fragments of my tutorials: 
+https://itunes.apple.com/us/app/yet-another-spaceshooter/id949662362?mt=8
 
 
 
