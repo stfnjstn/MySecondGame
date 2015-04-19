@@ -1,9 +1,11 @@
 MySecondGame
 ===========
 
-Sample code related to my blog
+Sample code related to my blog:
+http://developerplayground.net
 
-http://stefansdevplayground.blogspot.de
+Tutorial:
+http://developerplayground.net/?p=16
 
 The videos are available in my YouTube channel: https://www.youtube.com/channel/UCwC_QHjZ-COEQpLVAjaDyfQ
 
