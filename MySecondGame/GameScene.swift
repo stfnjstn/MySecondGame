@@ -131,10 +131,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.runAction(SKAction.waitForDuration(2), completion: { emitterNode.removeFromParent() })
     }
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         /* Called when a touch begins */
         
-        for touch: AnyObject in touches {
+        for touch in (touches as! Set<UITouch>) {
             var location = touch.locationInNode(self)
             var node = self.nodeAtPoint(location)
             if (node.name == "PauseButton") || (node.name == "PauseButtonContainer") {
