@@ -3,7 +3,7 @@ MySecondGame
 
 Sample code related to my blog
 
-http://stefansdevplayground.blogspot.de
+http://developerplayground.net/?p=5
 
 The videos are available in my YouTube channel: https://www.youtube.com/channel/UCwC_QHjZ-COEQpLVAjaDyfQ
 
@@ -21,7 +21,7 @@ The MIT License (MIT)
 [OSI Approved License]
 The MIT License (MIT)
 
-Copyright (c) 2014 by Stefan Josten
+Copyright (c) 2015 by Stefan Josten
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

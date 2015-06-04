@@ -14,6 +14,7 @@
 		2C5516DE1A0974B800F55C08 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 2C5516DD1A0974B800F55C08 /* README.md */; };
 		2C5516E01A0974C900F55C08 /* License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C5516DF1A0974C900F55C08 /* License.txt */; };
 		2C5516E21A1026A300F55C08 /* EnemySpriteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5516E11A1026A300F55C08 /* EnemySpriteController.swift */; };
+		2C6E24B11B1E2FE4003C0BB9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E24B01B1E2FE4003C0BB9 /* StoreKit.framework */; };
 		2C9D0FC119F9AC320028E429 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9D0FC019F9AC320028E429 /* AppDelegate.swift */; };
 		2C9D0FC519F9AC320028E429 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9D0FC419F9AC320028E429 /* GameScene.swift */; };
 		2C9D0FC719F9AC320028E429 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9D0FC619F9AC320028E429 /* GameViewController.swift */; };
@@ -30,6 +31,7 @@
 		2C5516DD1A0974B800F55C08 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = MySecondGame/README.md; sourceTree = "<group>"; };
 		2C5516DF1A0974C900F55C08 /* License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
 		2C5516E11A1026A300F55C08 /* EnemySpriteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnemySpriteController.swift; sourceTree = "<group>"; };
+		2C6E24B01B1E2FE4003C0BB9 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2C9D0FBB19F9AC320028E429 /* MySecondGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MySecondGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C9D0FBF19F9AC320028E429 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C9D0FC019F9AC320028E429 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -46,6 +48,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C12B2A21A5F36B400931AEF /* GameKit.framework in Frameworks */,
+				2C6E24B11B1E2FE4003C0BB9 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +68,7 @@
 		2C9D0FB219F9AC320028E429 = {
 			isa = PBXGroup;
 			children = (
+				2C6E24B01B1E2FE4003C0BB9 /* StoreKit.framework */,
 				2C12B2A11A5F36B400931AEF /* GameKit.framework */,
 				2C5516DD1A0974B800F55C08 /* README.md */,
 				2C9D0FBD19F9AC320028E429 /* MySecondGame */,
@@ -139,6 +143,9 @@
 						DevelopmentTeam = XU67R53NEB;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
 						};

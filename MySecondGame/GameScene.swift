@@ -8,6 +8,7 @@
 
 import SpriteKit
 import GameKit
+import StoreKit
 
 // protocol to inform the delegate (GameViewController) about a game over situation
 protocol GameSceneDelegate {
@@ -17,7 +18,7 @@ protocol GameSceneDelegate {
 let collisionBulletCategory: UInt32  = 0x1 << 0
 let collisionHeroCategory: UInt32    = 0x1 << 1
 
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver, SKProductsRequestDelegate  {
     
     let soundAction = SKAction.playSoundFileNamed("Explosion.wav", waitForCompletion: false)
     
@@ -93,9 +94,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         emitterNode.zPosition = -12
         self.addChild(emitterNode)
         
+        // In-App Purchase
+        initInAppPurchases()
+        checkAndActivateGreenShip()
+        
     }
     
-    
+    // --------------------------
+    // ---- particle effects ----
+    // --------------------------
     func starfieldEmitter(color: SKColor, starSpeedY: CGFloat, starsPerSecond: CGFloat, starScaleFactor: CGFloat) -> SKEmitterNode {
 
         // Determine the time a star is visible on screen
@@ -121,9 +128,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         return emitterNode
     }
 
-
-    
-    
     func explosion(pos: CGPoint) {
         var emitterNode = SKEmitterNode(fileNamed: "ExplosionParticle.sks")
         emitterNode.particlePosition = pos
@@ -131,6 +135,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.runAction(SKAction.waitForDuration(2), completion: { emitterNode.removeFromParent() })
     }
     
+    // Handle touch events
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         /* Called when a touch begins */
         
@@ -139,6 +144,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             var node = self.nodeAtPoint(location)
             if (node.name == "PauseButton") || (node.name == "PauseButtonContainer") {
                 showPauseAlert()
+            } else if (node.name == "PurchaseButton") {
+                inAppPurchase()
             } else {
        
                 // Determine the new position for the invisible sprite:
@@ -176,7 +183,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             })
         self.view?.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
     }
-
     
     func createHUD() {
         
@@ -215,6 +221,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pauseButton.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center
         pauseButton.name="PauseButton"
         hud.addChild(pauseButton)
+        
+        // Add a $ Button for In-App Purchases:
+        var purchaseButton = SKLabelNode()
+        purchaseButton.position = CGPointMake(hud.size.width/2.5, 1)
+        purchaseButton.text="$$$"
+        purchaseButton.fontSize=hud.size.height
+        purchaseButton.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center
+        purchaseButton.name="PurchaseButton"
+        hud.addChild(purchaseButton)
         
         // Display the current score
         self.score = 0
@@ -255,7 +270,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         })
     }
     
-
+    // Game Over
     func showGameOverAlert() {
         self.gameOver = true
         var alert = UIAlertController(title: "Game Over", message: "", preferredStyle: UIAlertControllerStyle.Alert)
@@ -277,6 +292,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.view?.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
     }
 
+    // Game Center integration
     func addLeaderboardScore(score: Int64) {
         var newGCScore = GKScore(leaderboardIdentifier: "MySecondGameLeaderboard")
         newGCScore.value = score
@@ -292,12 +308,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         })
     }
 
+    // Handle collisions
     func didBeginContact(contact: SKPhysicsContact) {
         if !self.gamePaused {
             lifeLost()
         }
     }
     
+    // Game Loop
     var _dLastShootTime: CFTimeInterval = 1
     override func update(currentTime: CFTimeInterval) {
 
@@ -313,5 +331,139 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
+    
+    // ---------------------------------
+    // ---- Handle In-App Purchases ----
+    // ---------------------------------
+    
+    private var request : SKProductsRequest!
+    private var products : [SKProduct] = [] // List of available purchases
+    private var greenShipPurchased = false // Used to enable/disable the 'green ship' feature
+    
+    // Open a menu with the available purchases
+    func inAppPurchase() {
+        
+        var alert = UIAlertController(title: "In App Purchases", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        self.gamePaused = true
+        
+        // Add an alert action for each available product
+        for (var i = 0; i < products.count; i++) {
+            
+            var currentProduct = products[i]
+            if !(currentProduct.productIdentifier == "MySecondGameGreenShip" && greenShipPurchased) {
+                
+                // Get the localized price
+                let numberFormatter = NSNumberFormatter()
+                numberFormatter.numberStyle = .CurrencyStyle
+                numberFormatter.locale = currentProduct.priceLocale
+                
+                // Add the alert action
+                alert.addAction(UIAlertAction(title: currentProduct.localizedTitle + " " + numberFormatter.stringFromNumber(currentProduct.price)!, style: UIAlertActionStyle.Default)  { _ in
+                    
+                    // Perform the purchase
+                    self.buyProduct(currentProduct)
+                    self.gamePaused = false
+                    })
+            }
+        }
+        
+        // Offer the restore option only if purchase info is not available
+        if(greenShipPurchased == false) {
+            alert.addAction(UIAlertAction(title: "Restore", style: UIAlertActionStyle.Default)  { _ in
+                self.restorePurchasedProducts()
+                self.gamePaused = false
+                })
+        }
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { _ in
+            self.gamePaused = false
+            })
+        
+        // Show the alert
+        self.view?.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    // Initialize the App Purchases
+    func initInAppPurchases() {
+        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+    
+        // Get the list of possible purchases
+        if self.request == nil {
+            self.request = SKProductsRequest(productIdentifiers: Set(["MySecondGameGreenShip","MySecondGameDonate"]))
+            self.request.delegate = self
+            self.request.start()
+        }
+    }
+    
+    // Request a purchase
+    func buyProduct(product: SKProduct) {
+        let payment = SKPayment(product: product)
+        SKPaymentQueue.defaultQueue().addPayment(payment)
+    }
+    
+    // Restore purchases
+    func restorePurchasedProducts() {
+        SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+    }
+    
+    // StoreKit protocoll method. Called when the AppStore responds
+    func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
+        self.products = response.products as! [SKProduct]
+        self.request = nil
+    }
+    
+    // StoreKit protocoll method. Called when an error happens in the communication with the AppStore
+    func request(request: SKRequest!, didFailWithError error: NSError!) {
+        println(error)
+        self.request = nil
+    }
+    
+    // StoreKit protocoll method. Called after the purchase
+    func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!) {
+        
+        for transaction in transactions as! [SKPaymentTransaction] {
+            switch (transaction.transactionState) {
+                
+            case .Purchased:
+                if transaction.payment.productIdentifier == "MySecondGameGreenShip" {
+                    handleGreenShipPurchased()
+                }
+                queue.finishTransaction(transaction)
+                
+            case .Restored:
+                if transaction.payment.productIdentifier == "MySecondGameGreenShip" {
+                    handleGreenShipPurchased()
+                }
+                queue.finishTransaction(transaction)
+                
+            case .Failed:
+                println("Payment Error: %@", transaction.error)
+                queue.finishTransaction(transaction)
+            default:
+                println("Transaction State: %@", transaction.transactionState)
+            }
+        }
+    }
+    
+    // Called after the purchase to provide the 'green ship' feature
+    func handleGreenShipPurchased() {
+        greenShipPurchased = true
+        checkAndActivateGreenShip()
+        // persist the purchase locally
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "MySecondGameGreenShip")
+    }
+    
+    // Called after applicattion start to check if the 'green ship' feature was purchased
+    func checkAndActivateGreenShip() {
+        if NSUserDefaults.standardUserDefaults().boolForKey("MySecondGameGreenShip") {
+            greenShipPurchased = true
+            heroSprite.color = UIColor.greenColor()
+            heroSprite.colorBlendFactor=0.8
+        }
+    }
+    
+    
+
 
 }
