@@ -30,9 +30,9 @@ class GameViewController: UIViewController, ADBannerViewDelegate, GKGameCenterCo
         super.viewDidAppear(animated)
         
         // Detect the screensize
-        var sizeRect = UIScreen.mainScreen().applicationFrame
-        var width = sizeRect.size.width * UIScreen.mainScreen().scale
-        var height = sizeRect.size.height * UIScreen.mainScreen().scale
+        let sizeRect = UIScreen.mainScreen().applicationFrame
+        let width = sizeRect.size.width * UIScreen.mainScreen().scale
+        let height = sizeRect.size.height * UIScreen.mainScreen().scale
         
         // Create a fullscreen Scene object
         scene = GameScene(size: CGSizeMake(width, height))
@@ -62,8 +62,8 @@ class GameViewController: UIViewController, ADBannerViewDelegate, GKGameCenterCo
         return true
     }
 
-    override func supportedInterfaceOrientations() -> Int {
-        return Int(UIInterfaceOrientationMask.LandscapeLeft.rawValue)
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.LandscapeLeft
     }
 
     override func didReceiveMemoryWarning() {
@@ -85,7 +85,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, GKGameCenterCo
             GKLocalPlayer.localPlayer().authenticateHandler = {(viewController, error) -> Void in
                 if viewController != nil {
                     //self.scene!.gamePaused = true
-                    self.presentViewController(viewController, animated: true, completion: nil)
+                    self.presentViewController(viewController!, animated: true, completion: nil)
 
                     // Add an observer which calls 'gameCenterStateChanged' to handle a changed game center state
                     let notificationCenter = NSNotificationCenter.defaultCenter()
@@ -104,7 +104,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, GKGameCenterCo
     // Show game center leaderboard
     func gameOver() {
         
-        var gcViewController = GKGameCenterViewController()
+        let gcViewController = GKGameCenterViewController()
         gcViewController.gameCenterDelegate = self
         gcViewController.viewState = GKGameCenterViewControllerState.Leaderboards
         gcViewController.leaderboardIdentifier = "MySecondGameLeaderboard"
@@ -120,7 +120,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, GKGameCenterCo
     }
     
     // Continue the game after GameCenter is closed
-    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController) {
         gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
         //scene!.gameOver = false
         
@@ -160,7 +160,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, GKGameCenterCo
     // Open a fullscreen Ad
     func openAds(sender: AnyObject) {
         // Create an alert
-        var alert = UIAlertController(title: "", message: "Play again?", preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "", message: "Play again?", preferredStyle: UIAlertControllerStyle.Alert)
         
         // Play again option
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default)  { _ in

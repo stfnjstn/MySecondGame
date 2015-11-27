@@ -28,9 +28,9 @@ class EnemySpriteController {
         newEnemy.colorBlendFactor=0.6
         
         // position new sprite at a random position on the screen
-        var sizeRect = UIScreen.mainScreen().applicationFrame;
-        var posX = arc4random_uniform(UInt32(sizeRect.size.width))
-        var posY = arc4random_uniform(UInt32(sizeRect.size.height))
+        let sizeRect = UIScreen.mainScreen().applicationFrame;
+        let posX = arc4random_uniform(UInt32(sizeRect.size.width))
+        let posY = arc4random_uniform(UInt32(sizeRect.size.height))
         newEnemy.position = CGPoint(x: CGFloat(posX), y: CGFloat(posY))
         
         // Define Constraints for orientation/targeting behavior

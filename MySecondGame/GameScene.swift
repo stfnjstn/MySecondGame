@@ -50,7 +50,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
         
         // Add physics body for collision detection
         heroSprite.physicsBody?.dynamic = true
-        heroSprite.physicsBody = SKPhysicsBody(texture: heroSprite.texture, size: heroSprite.size)
+        heroSprite.physicsBody = SKPhysicsBody(texture: heroSprite.texture!, size: heroSprite.size)
         heroSprite.physicsBody?.affectedByGravity = false
         heroSprite.physicsBody?.categoryBitMask = collisionHeroCategory
         heroSprite.physicsBody?.contactTestBitMask = collisionBulletCategory
@@ -129,23 +129,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
     }
 
     func explosion(pos: CGPoint) {
-        var emitterNode = SKEmitterNode(fileNamed: "ExplosionParticle.sks")
-        emitterNode.particlePosition = pos
-        self.addChild(emitterNode)
-        self.runAction(SKAction.waitForDuration(2), completion: { emitterNode.removeFromParent() })
+        let emitterNode = SKEmitterNode(fileNamed: "ExplosionParticle.sks")
+        emitterNode!.particlePosition = pos
+        self.addChild(emitterNode!)
+        self.runAction(SKAction.waitForDuration(2), completion: { emitterNode!.removeFromParent() })
     }
     
     // Handle touch events
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         /* Called when a touch begins */
         
-        for touch in (touches as! Set<UITouch>) {
-            var location = touch.locationInNode(self)
-            var node = self.nodeAtPoint(location)
+        for touch in (touches ) {
+            let location = touch.locationInNode(self)
+            let node = self.nodeAtPoint(location)
             if (node.name == "PauseButton") || (node.name == "PauseButtonContainer") {
                 showPauseAlert()
             } else if (node.name == "PurchaseButton") {
                 inAppPurchase()
+            } else if (node.name == "InfoButton") {
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://stefansdevplayground.blogspot.com/p/tutorials.html")!)
             } else {
        
                 // Determine the new position for the invisible sprite:
@@ -177,7 +179,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
     // Show Pause Alert
     func showPauseAlert() {
         self.gamePaused = true
-        var alert = UIAlertController(title: "Pause", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "Pause", message: "", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Continue", style: UIAlertActionStyle.Default)  { _ in
             self.gamePaused = false
             })
@@ -188,7 +190,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
         
         // Create a root node with black background to position and group the HUD elemets
         // HUD size is relative to the screen resolution to handle iPad and iPhone screens
-        var hud = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(self.size.width, self.size.height*0.05))
+        let hud = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(self.size.width, self.size.height*0.05))
         hud.anchorPoint=CGPointMake(0, 0)
         hud.position = CGPointMake(0, self.size.height-hud.size.height)
         self.addChild(hud)
@@ -198,7 +200,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
         // Reuse the Spaceship image: Scale and position releative to the HUD size
         let lifeSize = CGSizeMake(hud.size.height-10, hud.size.height-10)
         for(var i = 0; i<self.remainingLifes; i++) {
-            var tmpNode = SKSpriteNode(imageNamed: "Spaceship")
+            let tmpNode = SKSpriteNode(imageNamed: "Spaceship")
             lifeNodes.append(tmpNode)
             tmpNode.size = lifeSize
             tmpNode.position=CGPointMake(tmpNode.size.width * 1.3 * (1.0 + CGFloat(i)), (hud.size.height-5)/2)
@@ -208,13 +210,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
         // Pause button container and label
         // Needed to increase the touchable area
         // Names will be used to identify these elements in the touch handler
-        var pauseContainer = SKSpriteNode()
+        let pauseContainer = SKSpriteNode()
         pauseContainer.position = CGPointMake(hud.size.width/1.5, 1)
         pauseContainer.size = CGSizeMake(hud.size.height*3, hud.size.height*2)
         pauseContainer.name = "PauseButtonContainer"
         hud.addChild(pauseContainer)
         
-        var pauseButton = SKLabelNode()
+        let pauseButton = SKLabelNode()
         pauseButton.position = CGPointMake(hud.size.width/1.5, 1)
         pauseButton.text="I I"
         pauseButton.fontSize=hud.size.height
@@ -223,7 +225,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
         hud.addChild(pauseButton)
         
         // Add a $ Button for In-App Purchases:
-        var purchaseButton = SKLabelNode()
+        let purchaseButton = SKLabelNode()
         purchaseButton.position = CGPointMake(hud.size.width/2.5, 1)
         purchaseButton.text="$$$"
         purchaseButton.fontSize=hud.size.height
@@ -237,6 +239,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
         self.scoreNode.text = "0"
         self.scoreNode.fontSize = hud.size.height
         hud.addChild(self.scoreNode)
+        
+        // Add Info button to show tutorials
+        let infoButton = SKLabelNode()
+        infoButton.position = CGPointMake(hud.size.width/3, 1)
+        infoButton.text="Info"
+        infoButton.fontSize=hud.size.height
+        infoButton.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center
+        infoButton.name="InfoButton"
+        hud.addChild(infoButton)
         
     }
     
@@ -273,7 +284,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
     // Game Over
     func showGameOverAlert() {
         self.gameOver = true
-        var alert = UIAlertController(title: "Game Over", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "Game Over", message: "", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default)  { _ in
             
             // restore lifes in HUD
@@ -294,11 +305,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
 
     // Game Center integration
     func addLeaderboardScore(score: Int64) {
-        var newGCScore = GKScore(leaderboardIdentifier: "MySecondGameLeaderboard")
+        let newGCScore = GKScore(leaderboardIdentifier: "MySecondGameLeaderboard")
         newGCScore.value = score
         GKScore.reportScores([newGCScore], withCompletionHandler: {(error) -> Void in
             if error != nil {
-                println("Score not submitted")
+                print("Score not submitted")
                 // Continue
                 self.gameOver = false
             } else {
@@ -343,14 +354,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
     // Open a menu with the available purchases
     func inAppPurchase() {
         
-        var alert = UIAlertController(title: "In App Purchases", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "In App Purchases", message: "", preferredStyle: UIAlertControllerStyle.Alert)
         
         self.gamePaused = true
         
         // Add an alert action for each available product
         for (var i = 0; i < products.count; i++) {
             
-            var currentProduct = products[i]
+            let currentProduct = products[i]
             if !(currentProduct.productIdentifier == "MySecondGameGreenShip" && greenShipPurchased) {
                 
                 // Get the localized price
@@ -408,21 +419,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
     }
     
     // StoreKit protocoll method. Called when the AppStore responds
-    func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
-        self.products = response.products as! [SKProduct]
+    func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
+        self.products = response.products 
         self.request = nil
     }
     
     // StoreKit protocoll method. Called when an error happens in the communication with the AppStore
-    func request(request: SKRequest!, didFailWithError error: NSError!) {
-        println(error)
+    func request(request: SKRequest, didFailWithError error: NSError) {
+        print(error)
         self.request = nil
     }
     
     // StoreKit protocoll method. Called after the purchase
-    func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!) {
+    func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         
-        for transaction in transactions as! [SKPaymentTransaction] {
+        for transaction in transactions {
             switch (transaction.transactionState) {
                 
             case .Purchased:
@@ -438,10 +449,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, SKPaymentTransactionObserver
                 queue.finishTransaction(transaction)
                 
             case .Failed:
-                println("Payment Error: %@", transaction.error)
+                print("Payment Error: %@", transaction.error)
                 queue.finishTransaction(transaction)
             default:
-                println("Transaction State: %@", transaction.transactionState)
+                print("Transaction State: %@", transaction.transactionState)
             }
         }
     }
